@@ -1,0 +1,207 @@
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
+
+    --color-primary-50: oklch(0.97 0.02 240);
+    --color-primary-100: oklch(0.94 0.04 240);
+    --color-primary-200: oklch(0.88 0.08 240);
+    --color-primary-300: oklch(0.78 0.12 240);
+    --color-primary-400: oklch(0.68 0.16 235);
+    --color-primary-500: oklch(0.58 0.18 235);
+    --color-primary-600: oklch(0.50 0.18 235);
+    --color-primary-700: oklch(0.42 0.16 235);
+    --color-primary-800: oklch(0.35 0.12 235);
+    --color-primary-900: oklch(0.28 0.08 235);
+}
+
+/* Base styles */
+body {
+    font-family: var(--font-sans);
+}
+
+/* Navigation link */
+.nav-link {
+    @apply text-neutral-600 hover:text-primary-600 transition-colors font-medium text-sm;
+}
+
+/* Button styles */
+.btn-primary {
+    @apply inline-flex items-center justify-center px-6 py-3 bg-primary-600 text-white font-semibold rounded-full hover:bg-primary-700 transition-colors shadow-md hover:shadow-lg;
+}
+
+.btn-outline {
+    @apply inline-flex items-center justify-center px-6 py-3 border-2 border-neutral-300 text-neutral-700 font-semibold rounded-full hover:border-primary-600 hover:text-primary-600 transition-colors;
+}
+
+.btn-outline-light {
+    @apply inline-flex items-center justify-center px-6 py-3 border-2 border-white/50 text-white font-semibold rounded-full hover:bg-white/10 transition-colors;
+}
+
+/* Configurator viewport */
+.configurator-viewport {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3/4;
+    max-height: 80vh;
+    overflow: hidden;
+    background: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+}
+
+.configurator-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.configurator-layer.loading {
+    opacity: 0;
+}
+
+/* Option button styles */
+.option-btn {
+    @apply relative flex flex-col items-center justify-center p-3 border-2 border-neutral-200 rounded-xl cursor-pointer transition-all hover:border-primary-400 hover:shadow-md;
+}
+
+.option-btn-active {
+    @apply border-primary-600 bg-primary-50 shadow-lg;
+}
+
+.option-btn img {
+    @apply w-12 h-12 object-contain mb-2;
+}
+
+.option-btn span {
+    @apply text-xs text-neutral-600 text-center;
+}
+
+/* Fabric swatch */
+.fabric-swatch {
+    @apply relative cursor-pointer transition-all hover:scale-105;
+}
+
+.fabric-swatch.active {
+    @apply ring-2 ring-primary-600 ring-offset-2;
+}
+
+.fabric-swatch img {
+    @apply w-full h-full object-cover rounded-lg;
+}
+
+/* Price display */
+.price-display {
+    @apply text-2xl font-bold text-primary-700;
+}
+
+/* Sticky sidebar */
+@media (min-width: 1024px) {
+    .configurator-sidebar {
+        position: sticky;
+        top: 1rem;
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
+    }
+}
+
+/* Tab styles */
+.config-tab {
+    @apply py-2 px-4 text-sm font-medium text-neutral-500 border-b-2 border-transparent transition-all cursor-pointer hover:text-neutral-900;
+}
+
+.config-tab.active {
+    @apply text-primary-700 border-primary-600;
+}
+
+/* Animation for layer changes */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.layer-fade-in {
+    animation: fadeIn 0.3s ease forwards;
+}
+
+/* Mobile drawer */
+.mobile-drawer {
+    @apply fixed left-0 right-0 bottom-0 bg-white rounded-t-2xl shadow-2xl z-50 transition-transform duration-300;
+}
+
+.mobile-drawer.closed {
+    transform: translateY(100%);
+}
+
+/* View rotation buttons */
+.view-btn {
+    @apply p-2 rounded-lg bg-white border border-neutral-200 cursor-pointer transition-all hover:bg-neutral-100;
+}
+
+.view-btn.active {
+    @apply bg-primary-600 text-white border-primary-600;
+}
+
+/* Form input styles */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="password"],
+textarea,
+select {
+    @apply w-full px-4 py-3 border border-neutral-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="password"]:focus,
+textarea:focus,
+select:focus {
+    @apply outline-none;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    @apply bg-neutral-100 rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+    @apply bg-neutral-300 rounded-full hover:bg-neutral-400;
+}
+
+/* Loading spinner */
+.spinner {
+    @apply w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin;
+}
+
+/* Toast notification */
+.toast {
+    @apply fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 text-white;
+}
+
+.toast-success {
+    @apply bg-green-500;
+}
+
+.toast-error {
+    @apply bg-red-500;
+}
+
+.toast-warning {
+    @apply bg-yellow-500;
+}

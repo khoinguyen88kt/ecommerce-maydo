@@ -1,0 +1,144 @@
+/**
+ * Suit Icon Fonts - Based on vestonduynguyen.com
+ * Font icons for suit configurator UI
+ */
+
+@font-face {
+    font-family: "man-jacket";
+    src: url("/fonts/man-jacket.woff") format("woff"),
+         url("/fonts/man-jacket.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "man-pants";
+    src: url("/fonts/man-pants.woff") format("woff"),
+         url("/fonts/man-pants.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: "man-waistcoat";
+    src: url("/fonts/man-waistcoat.woff") format("woff"),
+         url("/fonts/man-waistcoat.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* Base icon classes */
+.fa-suits,
+.man-jacket {
+    font-family: 'man-jacket' !important;
+    font-style: normal;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.fa-pants,
+.man-pants {
+    font-family: 'man-pants' !important;
+    font-style: normal;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.fa-vest,
+.man-waistcoat {
+    font-family: 'man-waistcoat' !important;
+    font-style: normal;
+    display: inline-block;
+    line-height: 1;
+    text-transform: none;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Size variations */
+.fa-suits.fa-lg { font-size: 100px; }
+.fa-suits.fa-md { font-size: 70px; }
+.fa-suits.fa-sm { font-size: 50px; }
+.fa-suits.fa-xs { font-size: 30px; }
+
+.fa-pants.fa-lg { font-size: 100px; }
+.fa-pants.fa-md { font-size: 70px; }
+.fa-pants.fa-sm { font-size: 50px; }
+.fa-pants.fa-xs { font-size: 30px; }
+
+.fa-vest.fa-lg { font-size: 100px; }
+.fa-vest.fa-md { font-size: 70px; }
+.fa-vest.fa-sm { font-size: 50px; }
+.fa-vest.fa-xs { font-size: 30px; }
+
+/*
+ * Icon Character Mapping (man-jacket font):
+ *
+ * Jacket Styles:
+ * a = Một hàng (Simple/Single Breasted)
+ * f = Hai hàng (Double Breasted/Crossed)
+ * g = Châu Á (Mao/Mandarin Collar)
+ *
+ * Fit:
+ * a = Cổ điển (Classic Fit)
+ * b = Vừa vặn (Slim Fit)
+ *
+ * Lapel Types:
+ * c = Ve xuôi (Notch/Standard Lapel)
+ * d = Ve vếch (Peak Lapel)
+ *
+ * Buttons:
+ * C = Button icon
+ *
+ * Pockets:
+ * l = Túi có (With pocket)
+ * Z = Không túi (No pocket)
+ * m = 3 túi viền
+ * n = Túi ốp ngoài
+ *
+ * Back Vents:
+ * o = Không xẻ (No vent)
+ * p = Xẻ sau lưng (Center vent)
+ * q = Xẻ sườn (Side vents)
+ *
+ * Sleeve Buttons:
+ * j = Cúc áo
+ * A = Tay áo sẻ thật
+ * i = Tay kín
+ *
+ * Set Types:
+ * L = Vest + Quần
+ * K = Thêm ghi lê
+ */
+
+/* Suit model card with icon */
+.suit-model-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 120px;
+    background: linear-gradient(to bottom, #f0f7ff, #e0efff);
+}
+
+.suit-model-icon .fa-suits {
+    text-align: center;
+}
+
+/* Active state */
+.suit-model-card.active .fa-suits {
+    color: #0066cc;
+}
+
+/* Hover state */
+.suit-model-card:hover .fa-suits {
+    color: #003d7a;
+}

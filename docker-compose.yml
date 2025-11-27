@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: suit-configurator-app
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./:/var/www
+      - ./docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
+    networks:
+      - suit-configurator
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:alpine
+    container_name: suit-configurator-nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+    networks:
+      - suit-configurator
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    container_name: suit-configurator-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: suit_configurator
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: suit_user
+      MYSQL_PASSWORD: suit_password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+    ports:
+      - "3307:3306"
+    networks:
+      - suit-configurator
+
+networks:
+  suit-configurator:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local

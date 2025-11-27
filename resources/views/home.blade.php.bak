@@ -1,0 +1,273 @@
+@extends('layouts.app')
+
+@section('title', 'May Đo Vest Nam Cao Cấp | Suit Configurator')
+@section('description', 'Thiết kế vest nam may đo cao cấp theo phong cách riêng của bạn. Vải nhập khẩu, đường may tinh tế - Giao hàng toàn quốc.')
+
+@section('structured_data')
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Store",
+    "name": "Suit Configurator",
+    "description": "May đo vest nam cao cấp với vải nhập khẩu, đường may tinh tế",
+    "url": "{{ url('/') }}",
+    "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "123 Đường ABC",
+        "addressLocality": "Quận 1",
+        "addressRegion": "TP. Hồ Chí Minh",
+        "addressCountry": "VN"
+    },
+    "priceRange": "₫₫₫"
+}
+</script>
+@endsection
+
+@section('content')
+{{-- Hero Section --}}
+<section class="relative h-[90vh] min-h-[600px] flex items-center">
+    <div class="absolute inset-0 bg-gradient-to-r from-neutral-900/80 to-neutral-900/40 z-10"></div>
+    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('{{ asset('images/hero-suit.jpg') }}');"></div>
+
+    <div class="container mx-auto px-4 relative z-20">
+        <div class="max-w-2xl">
+            <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-6 leading-tight">
+                May Đo Vest Nam<br>
+                <span class="text-primary-400">Theo Phong Cách Riêng</span>
+            </h1>
+            <p class="text-lg text-neutral-200 mb-8 leading-relaxed">
+                Tự thiết kế bộ vest hoàn hảo cho bạn. Chọn vải cao cấp, kiểu dáng,
+                chi tiết - tất cả theo ý muốn của bạn.
+            </p>
+            <div class="flex flex-wrap gap-4">
+                <a href="{{ route('configurator.index') }}" class="btn-primary text-lg px-8 py-4">
+                    Bắt đầu thiết kế
+                    <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                    </svg>
+                </a>
+                <a href="{{ route('fabrics.index') }}" class="btn-outline-light text-lg px-8 py-4">
+                    Xem bộ sưu tập vải
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {{-- Scroll indicator --}}
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 animate-bounce">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+        </svg>
+    </div>
+</section>
+
+{{-- How it works --}}
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">Quy Trình May Đo</h2>
+            <p class="text-neutral-600 max-w-2xl mx-auto">
+                Chỉ với 4 bước đơn giản, bạn sẽ có bộ vest may đo hoàn hảo
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-4 gap-8">
+            @php
+            $steps = [
+                ['icon' => 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z', 'title' => 'Chọn kiểu vest', 'desc' => 'Chọn kiểu dáng vest phù hợp với phong cách của bạn'],
+                ['icon' => 'M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01', 'title' => 'Chọn vải & màu', 'desc' => 'Lựa chọn từ bộ sưu tập vải cao cấp nhập khẩu'],
+                ['icon' => 'M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4', 'title' => 'Tùy chỉnh chi tiết', 'desc' => 'Chọn ve áo, túi, nút, xẻ lưng theo ý muốn'],
+                ['icon' => 'M5 13l4 4L19 7', 'title' => 'Hoàn thành đơn hàng', 'desc' => 'Đặt hàng và nhận vest trong 7-10 ngày'],
+            ];
+            @endphp
+
+            @foreach($steps as $index => $step)
+            <div class="relative text-center">
+                @if($index < 3)
+                <div class="hidden md:block absolute top-12 left-1/2 w-full h-0.5 bg-primary-200"></div>
+                @endif
+
+                <div class="relative z-10 w-24 h-24 mx-auto mb-6 bg-primary-100 rounded-full flex items-center justify-center">
+                    <svg class="w-10 h-10 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $step['icon'] }}"/>
+                    </svg>
+                </div>
+
+                <span class="inline-block px-3 py-1 bg-primary-600 text-white text-sm font-medium rounded-full mb-3">
+                    Bước {{ $index + 1 }}
+                </span>
+
+                <h3 class="text-lg font-semibold mb-2">{{ $step['title'] }}</h3>
+                <p class="text-neutral-600 text-sm">{{ $step['desc'] }}</p>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+{{-- Featured Models --}}
+<section class="py-20 bg-neutral-50">
+    <div class="container mx-auto px-4">
+        <div class="flex items-end justify-between mb-12">
+            <div>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold mb-2">Kiểu Vest Nổi Bật</h2>
+                <p class="text-neutral-600">Các mẫu vest được ưa chuộng nhất</p>
+            </div>
+            <a href="{{ route('configurator.index') }}" class="hidden md:flex items-center text-primary-600 font-medium hover:text-primary-700">
+                Xem tất cả
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            @forelse($featuredModels as $model)
+            <a href="{{ route('configurator.index') }}?model={{ $model->id }}" class="group bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300">
+                <div class="aspect-[3/4] bg-neutral-100 overflow-hidden">
+                    <img
+                        src="{{ $model->thumbnail_url ?? asset('images/models/placeholder.jpg') }}"
+                        alt="{{ $model->name_vi }}"
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    >
+                </div>
+                <div class="p-4">
+                    <h3 class="font-semibold text-lg group-hover:text-primary-600 transition-colors">{{ $model->name_vi }}</h3>
+                    <p class="text-sm text-neutral-500 mt-1">{{ $model->short_description_vi }}</p>
+                    <p class="text-primary-600 font-bold mt-3">
+                        Từ {{ number_format($model->base_price, 0, ',', '.') }} ₫
+                    </p>
+                </div>
+            </a>
+            @empty
+            <div class="col-span-full text-center py-12 text-neutral-500">
+                Chưa có mẫu vest nào. Vui lòng quay lại sau.
+            </div>
+            @endforelse
+        </div>
+    </div>
+</section>
+
+{{-- Featured Fabrics --}}
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="flex items-end justify-between mb-12">
+            <div>
+                <h2 class="text-3xl md:text-4xl font-serif font-bold mb-2">Bộ Sưu Tập Vải</h2>
+                <p class="text-neutral-600">Vải cao cấp nhập khẩu từ Châu Âu</p>
+            </div>
+            <a href="{{ route('fabrics.index') }}" class="hidden md:flex items-center text-primary-600 font-medium hover:text-primary-700">
+                Xem bộ sưu tập
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+            </a>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-4">
+            @forelse($featuredFabrics as $fabric)
+            <a href="{{ route('configurator.index') }}?fabric={{ $fabric->id }}" class="group">
+                <div class="aspect-square rounded-xl overflow-hidden border-2 border-neutral-200 group-hover:border-primary-400 transition-colors">
+                    <img
+                        src="{{ $fabric->swatch_url ?? asset('images/fabrics/placeholder.jpg') }}"
+                        alt="{{ $fabric->name_vi }}"
+                        class="w-full h-full object-cover"
+                    >
+                </div>
+                <div class="mt-2">
+                    <p class="text-sm font-medium truncate">{{ $fabric->name_vi }}</p>
+                    <p class="text-xs text-neutral-500">{{ $fabric->code }}</p>
+                </div>
+            </a>
+            @empty
+            <div class="col-span-full text-center py-12 text-neutral-500">
+                Chưa có vải nào. Vui lòng quay lại sau.
+            </div>
+            @endforelse
+        </div>
+    </div>
+</section>
+
+{{-- Categories --}}
+<section class="py-20 bg-neutral-900 text-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">Danh Mục Vải</h2>
+            <p class="text-neutral-400 max-w-2xl mx-auto">
+                Khám phá các loại vải cao cấp từ khắp nơi trên thế giới
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 lg:grid-cols-5 gap-6">
+            @forelse($categories as $category)
+            <a href="{{ route('fabrics.category', $category->slug) }}" class="group block bg-neutral-800 rounded-xl p-6 text-center hover:bg-neutral-700 transition-colors">
+                <div class="w-16 h-16 mx-auto mb-4 bg-primary-600/20 rounded-full flex items-center justify-center group-hover:bg-primary-600/30 transition-colors">
+                    <svg class="w-8 h-8 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"/>
+                    </svg>
+                </div>
+                <h3 class="font-semibold mb-2">{{ $category->name_vi }}</h3>
+                <p class="text-sm text-neutral-400">{{ $category->fabrics_count ?? 0 }} loại vải</p>
+            </a>
+            @empty
+            <div class="col-span-full text-center py-12 text-neutral-500">
+                Chưa có danh mục nào.
+            </div>
+            @endforelse
+        </div>
+    </div>
+</section>
+
+{{-- Why Choose Us --}}
+<section class="py-20 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl md:text-4xl font-serif font-bold mb-4">Tại Sao Chọn Chúng Tôi?</h2>
+            <p class="text-neutral-600 max-w-2xl mx-auto">
+                Cam kết mang đến trải nghiệm may đo tốt nhất cho khách hàng
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            @php
+            $features = [
+                ['icon' => 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', 'title' => 'Chất lượng đảm bảo', 'desc' => 'Vải nhập khẩu cao cấp, đường may tinh tế, kiểm tra kỹ lưỡng'],
+                ['icon' => 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z', 'title' => 'Thợ may lành nghề', 'desc' => 'Đội ngũ thợ may với hơn 20 năm kinh nghiệm trong ngành'],
+                ['icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z', 'title' => 'Giao hàng nhanh', 'desc' => 'Hoàn thành trong 7-10 ngày, giao hàng toàn quốc'],
+                ['icon' => 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z', 'title' => 'Bảo hành trọn đời', 'desc' => 'Sửa chữa miễn phí, điều chỉnh size trong 30 ngày'],
+            ];
+            @endphp
+
+            @foreach($features as $feature)
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto mb-6 bg-primary-100 rounded-2xl flex items-center justify-center">
+                    <svg class="w-8 h-8 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $feature['icon'] }}"/>
+                    </svg>
+                </div>
+                <h3 class="text-lg font-semibold mb-2">{{ $feature['title'] }}</h3>
+                <p class="text-neutral-600 text-sm">{{ $feature['desc'] }}</p>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
+{{-- CTA Section --}}
+<section class="py-20 bg-primary-600">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl md:text-4xl font-serif font-bold text-white mb-4">
+            Sẵn sàng sở hữu bộ vest hoàn hảo?
+        </h2>
+        <p class="text-primary-100 mb-8 max-w-xl mx-auto">
+            Bắt đầu thiết kế ngay hôm nay và nhận ưu đãi 10% cho đơn hàng đầu tiên
+        </p>
+        <a href="{{ route('configurator.index') }}" class="inline-flex items-center px-8 py-4 bg-white text-primary-600 font-semibold rounded-full hover:bg-primary-50 transition-colors">
+            Thiết kế vest ngay
+            <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+            </svg>
+        </a>
+    </div>
+</section>
+@endsection
