@@ -7,104 +7,228 @@ Hệ thống website may đo vest nam cao cấp với giao diện thiết kế t
 ## ✨ Tính năng
 
 ### Người dùng
-- 🎨 **Thiết kế vest trực quan** - Xem trước vest với hệ thống layer PNG xếp chồng
-- 🔄 **Xoay góc nhìn** - Xem trước, bên, sau
-- 👔 **Tùy chỉnh đa dạng** - Ve áo, túi, nút, xẻ lưng, kiểu dáng
-- 🎭 **Bộ sưu tập vải** - Wool Ý, Anh, Linen, Cotton, Blend
+- 🎨 **Thiết kế vest trực quan** - Xem trước vest với hệ thống layer PNG xếp chồng (10,000+ layer images)
+- 🔄 **Xoay góc nhìn** - Xem mặt trước/sau
+- 👔 **Tùy chỉnh đa dạng** - 17 loại tùy chọn với 47+ giá trị (ve áo, túi, nút, xẻ lưng, kiểu dáng)
+- 🎭 **Bộ sưu tập vải** - 5 danh mục vải (Wool Ý, Anh, Linen, Cotton, Blend) với 20+ mẫu vải
 - 🔗 **Chia sẻ thiết kế** - Link chia sẻ unique cho mỗi cấu hình
 - 🛒 **Giỏ hàng & Thanh toán** - Đầy đủ quy trình e-commerce
 - 💳 **Đa phương thức thanh toán** - MoMo, VNPay, chuyển khoản, COD
 
 ### Admin (FilamentPHP)
 - 📊 **Dashboard quản lý** - Thống kê đơn hàng, doanh thu
-- 👔 **Quản lý Suit Models** - Thêm/sửa/xóa kiểu vest
+- 👔 **Quản lý Suit Models** - 5 mẫu vest sẵn có, thêm/sửa/xóa
 - 🧵 **Quản lý vải** - Danh mục, mã vải, giá, thành phần
 - ⚙️ **Quản lý tùy chọn** - Ve áo, túi, nút, xẻ lưng
+- 🖼️ **Quản lý Layer Images** - 9,995 layer images được seed sẵn
 - 📦 **Quản lý đơn hàng** - Theo dõi, cập nhật trạng thái
 - 📈 **Báo cáo** - Doanh thu, sản phẩm bán chạy
 
-## 🚀 Cài đặt
+## 🚀 Cài đặt với Docker (Khuyến nghị)
 
 ### Yêu cầu hệ thống
-- PHP >= 8.2
-- Composer
-- Node.js >= 18
-- MySQL >= 8.0
-- npm hoặc yarn
+- Docker Desktop
+- Docker Compose
+- 4GB RAM trở lên
+- 10GB dung lượng đĩa trống
 
-### Bước 1: Clone và cài đặt dependencies
+### Bước 1: Clone repository
 
 ```bash
-# Clone repository
+git clone <repository-url>
 cd suit-configurator
-
-# Cài đặt PHP packages
-composer install
-
-# Cài đặt Node packages
-npm install
 ```
 
 ### Bước 2: Cấu hình môi trường
 
 ```bash
-# Copy file môi trường
-cp .env.example .env
-
-# Generate app key
-php artisan key:generate
+# Copy file môi trường Docker
+cp .env.docker .env
 ```
 
-Chỉnh sửa file `.env`:
+File `.env` đã được cấu hình sẵn cho Docker:
 
 ```env
 APP_NAME="Suit Configurator"
 APP_URL=http://localhost:8000
 
 DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
+DB_HOST=db
 DB_PORT=3306
 DB_DATABASE=suit_configurator
-DB_USERNAME=root
-DB_PASSWORD=your_password
+DB_USERNAME=suit_user
+DB_PASSWORD=suit_password
 ```
 
-### Bước 3: Thiết lập database
+### Bước 3: Chạy setup script
 
 ```bash
-# Tạo database
-mysql -u root -p -e "CREATE DATABASE suit_configurator CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
-
-# Chạy migrations
-php artisan migrate
-
-# Seed dữ liệu mẫu
-php artisan db:seed
+chmod +x setup-docker.sh
+./setup-docker.sh
 ```
 
-### Bước 4: Build assets
+Script sẽ tự động:
+- ✅ Build Docker containers (PHP 8.3-FPM, Nginx, MySQL 8.0)
+- ✅ Cài đặt Composer dependencies
+- ✅ Generate application key
+- ✅ Chạy database migrations
+- ✅ Seed dữ liệu mẫu (option types, option values)
+- ✅ Cài đặt NPM dependencies
+- ✅ Build assets (Vite)
+- ✅ Fix permissions
+
+### Bước 4: Import dữ liệu đầy đủ (bao gồm layer images)
+
+**Quan trọng**: Project đã có sẵn database SQLite (`database/database.sqlite`) chứa đầy đủ:
+- 5 suit models
+- 5 fabric categories
+- 20 fabrics
+- 17 option types với 47 option values
+- **9,995 suit layer images** (quan trọng nhất!)
+- 3 users mẫu
+
+Chạy script migrate từ SQLite sang MySQL:
 
 ```bash
-# Development
-npm run dev
-
-# Production
-npm run build
+docker-compose exec app php migrate-sqlite-to-mysql.php
 ```
 
-### Bước 5: Chạy server
+Output mong đợi:
+```
+Migrating table: suit_models
+  Found 5 records
+  ✅ Completed
 
-```bash
-php artisan serve
+Migrating table: fabric_categories
+  Found 5 records
+  ✅ Completed
+
+Migrating table: fabrics
+  Found 20 records
+  ✅ Completed
+
+Migrating table: option_types
+  Found 17 records
+  ✅ Completed
+
+Migrating table: option_values
+  Found 47 records
+  ✅ Completed
+
+Migrating table: suit_layers
+  Found 9995 records
+  Processed 9995/9995
+  ✅ Completed
+
+✅ Migration completed successfully!
 ```
 
-Truy cập:
+### Bước 5: Truy cập ứng dụng
+
+Sau khi setup xong:
+
 - **Website**: http://localhost:8000
 - **Admin Panel**: http://localhost:8000/admin
+- **Thiết kế vest**: http://localhost:8000/thiet-ke-vest
+- **MySQL**: localhost:3307 (từ host machine)
 
 ### Tài khoản admin mặc định
 - Email: `admin@suitconfigurator.vn`
 - Password: `password`
+
+### Các lệnh Docker hữu ích
+
+```bash
+# Xem logs
+docker-compose logs -f
+docker-compose logs -f app
+docker-compose logs -f nginx
+
+# Chạy artisan commands
+docker-compose exec app php artisan [command]
+
+# Truy cập container
+docker-compose exec app bash
+
+# Dừng containers
+docker-compose down
+
+# Dừng và xóa volumes (reset database)
+docker-compose down -v
+
+# Rebuild containers
+docker-compose up -d --build --force-recreate
+
+# Restart services
+docker-compose restart
+
+# Xem trạng thái
+docker-compose ps
+```
+
+### Cấu trúc Docker
+
+```
+suit-configurator/
+├── docker-compose.yml           # Docker services configuration
+├── Dockerfile                   # PHP 8.3 FPM image
+├── setup-docker.sh             # Automated setup script
+├── migrate-sqlite-to-mysql.php # Data migration script
+├── .env.docker                 # Docker environment template
+└── docker/
+    ├── nginx/
+    │   └── conf.d/
+    │       └── default.conf    # Nginx configuration
+    ├── php/
+    │   └── local.ini          # PHP configuration
+    └── mysql/
+        └── my.cnf             # MySQL configuration
+```
+
+## 🛠️ Cài đặt thủ công (không dùng Docker)
+
+### Yêu cầu hệ thống
+- PHP >= 8.3
+- Composer
+- Node.js >= 18
+- MySQL >= 8.0
+- PHP Extensions: intl, pdo_mysql, mbstring, exif, pcntl, bcmath, gd, zip
+
+### Các bước cài đặt
+
+```bash
+# 1. Cài đặt dependencies
+composer install
+npm install
+
+# 2. Cấu hình môi trường
+cp .env.example .env
+php artisan key:generate
+
+# 3. Cấu hình database trong .env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=suit_configurator
+DB_USERNAME=root
+DB_PASSWORD=
+
+# 4. Tạo database
+mysql -u root -p -e "CREATE DATABASE suit_configurator CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+
+# 5. Chạy migrations
+php artisan migrate
+
+# 6. Import dữ liệu từ SQLite
+# Sửa file migrate-sqlite-to-mysql.php để dùng local MySQL
+php migrate-sqlite-to-mysql.php
+
+# 7. Build assets
+npm run build
+
+# 8. Chạy server
+php artisan serve
+```
 
 ## 📁 Cấu trúc thư mục
 
@@ -169,27 +293,46 @@ public/images/configurator/
                     └── back.png
 ```
 
+## 📊 Dữ liệu có sẵn sau khi setup
+
+Sau khi chạy migration script, database sẽ có:
+
+| Loại dữ liệu | Số lượng | Mô tả |
+|--------------|----------|--------|
+| Suit Models | 5 | Vest 2 nút Classic, 3 nút Business, Double Breasted, Slim Fit, Tuxedo |
+| Fabric Categories | 5 | Wool Ý, Wool Anh, Linen, Cotton, Blend |
+| Fabrics | 20 | Các mẫu vải trong từng danh mục |
+| Option Types | 17 | Chọn bộ, Kiểu vest, Dáng vest, Ve áo, Nút, Túi, v.v. |
+| Option Values | 47 | Các giá trị cụ thể cho mỗi option type |
+| **Suit Layers** | **9,995** | **Layer images PNG cho 3D preview** |
+| Users | 3 | Admin và 2 test users |
+
 ## 🛠️ Công nghệ sử dụng
 
-| Thành phần | Công nghệ |
-|------------|-----------|
-| Backend | Laravel 12 |
-| Admin Panel | FilamentPHP 3.2 |
-| Frontend | Alpine.js 3, Blade |
-| Styling | Tailwind CSS v4 |
-| Database | MySQL 8 |
-| Build Tool | Vite |
+| Thành phần | Công nghệ | Version |
+|------------|-----------|---------|
+| Backend | Laravel | 12.x |
+| Admin Panel | FilamentPHP | 3.2 |
+| Frontend | Alpine.js, Blade | 3.x |
+| Styling | Tailwind CSS | v4 |
+| Database | MySQL | 8.0 |
+| Build Tool | Vite | Latest |
+| Containerization | Docker, Docker Compose | Latest |
+| PHP | PHP-FPM | 8.3 |
+| Web Server | Nginx | Alpine |
 
 ## 📝 API Endpoints
 
 ### Configurator
-```
+
+```http
 POST /api/configurator/layers    # Lấy layer images
 POST /api/configurator/save      # Lưu cấu hình
 ```
 
 ### Cart
-```
+
+```http
 GET  /api/cart/count             # Đếm sản phẩm trong giỏ
 POST /api/cart/add               # Thêm vào giỏ
 PATCH /api/cart/item/{id}        # Cập nhật số lượng
