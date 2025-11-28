@@ -6,23 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
-    {
-        Schema::table('fabrics', function (Blueprint $table) {
-            $table->boolean('is_lining')->default(false)->after('is_featured');
-        });
-    }
+  /**
+   * Run the migrations.
+   */
+  public function up(): void
+  {
+    Schema::table('fabrics', function (Blueprint $table) {
+      $table->boolean('is_lining')->default(false)->after('is_featured');
+    });
+  }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::table('fabrics', function (Blueprint $table) {
-            $table->dropColumn('is_lining');
-        });
-    }
+  /**
+   * Reverse the migrations.
+   */
+  public function down(): void
+  {
+    Schema::table('fabrics', function (Blueprint $table) {
+      $table->dropColumn('is_lining');
+    });
+  }
 };
