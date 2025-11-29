@@ -8,6 +8,72 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+
+/*
+|--------------------------------------------------------------------------
+| GLB Model File Route (for 3D Viewer)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/storage/glb/{path}', function ($path) {
+  // Try multiple paths
+  $paths = [
+    storage_path('app/public/' . $path),
+    storage_path('app/' . $path),
+    public_path('storage/' . $path),
+  ];
+
+  $fullPath = null;
+  foreach ($paths as $p) {
+    if (file_exists($p)) {
+      $fullPath = $p;
+      break;
+    }
+  }
+
+  if (!$fullPath) {
+    abort(404, "GLB file not found: {$path}");
+  }
+
+  return response()->file($fullPath, [
+    'Content-Type' => 'model/gltf-binary',
+    'Access-Control-Allow-Origin' => '*',
+  ]);
+})->where('path', '.*')->name('glb.serve');
+
+/*
+|--------------------------------------------------------------------------
+| Image Proxy Route (for CORS bypass)
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/api/image-proxy', function () {
+  $url = request()->query('url');
+
+  if (!$url || !filter_var($url, FILTER_VALIDATE_URL)) {
+    abort(400, 'Invalid URL');
+  }
+
+  try {
+    $client = new \GuzzleHttp\Client([
+      'timeout' => 10,
+      'verify' => false,
+    ]);
+
+    $response = $client->get($url);
+    $contentType = $response->getHeaderLine('Content-Type') ?: 'image/jpeg';
+    $body = $response->getBody()->getContents();
+
+    return response($body, 200, [
+      'Content-Type' => $contentType,
+      'Access-Control-Allow-Origin' => '*',
+      'Cache-Control' => 'public, max-age=86400',
+    ]);
+  } catch (\Exception $e) {
+    abort(500, 'Failed to fetch image: ' . $e->getMessage());
+  }
+})->name('image.proxy');
 
 /*
 |--------------------------------------------------------------------------
@@ -83,9 +149,20 @@ Route::prefix('thanh-toan')->name('checkout.')->group(function () {
 */
 
 Route::prefix('api')->group(function () {
-  // Configurator
+  // Configurator (Layered Images)
   Route::get('/configurator/layers', [ConfiguratorController::class, 'getLayers']);
   Route::post('/configurator/save', [ConfiguratorController::class, 'save']);
+
+  // 3D Configurator (Modular Models)
+  Route::prefix('3d-configurator')->group(function () {
+    Route::get('/product-types', [\App\Http\Controllers\Api\ThreeDConfiguratorController::class, 'productTypes']);
+    Route::get('/{productType}', [\App\Http\Controllers\Api\ThreeDConfiguratorController::class, 'getConfiguration']);
+    Route::post('/{productType}/model-files', [\App\Http\Controllers\Api\ThreeDConfiguratorController::class, 'getModelFiles']);
+    Route::post('/{productType}/update-option', [\App\Http\Controllers\Api\ThreeDConfiguratorController::class, 'updateOption']);
+    Route::post('/{productType}/calculate-price', [\App\Http\Controllers\Api\ThreeDConfiguratorController::class, 'calculatePrice']);
+    Route::post('/{productType}/save', [\App\Http\Controllers\Api\ThreeDConfiguratorController::class, 'saveConfiguration']);
+    Route::get('/{productType}/fabrics', [\App\Http\Controllers\Api\ThreeDConfiguratorController::class, 'getFabrics']);
+  });
 
   // Cart
   Route::get('/cart/count', [CartController::class, 'count']);
@@ -104,14 +181,14 @@ Route::prefix('api')->group(function () {
 Route::middleware(['auth'])->group(function () {
   // Orders
   Route::prefix('don-hang')->name('orders.')->group(function () {
-  Route::get('/', [OrderController::class, 'index'])->name('index');
-  Route::get('/{order:order_number}', [OrderController::class, 'show'])->name('show');
+    Route::get('/', [OrderController::class, 'index'])->name('index');
+    Route::get('/{order:order_number}', [OrderController::class, 'show'])->name('show');
   });
 
   // Profile
   Route::prefix('tai-khoan')->name('profile.')->group(function () {
-  Route::get('/', [OrderController::class, 'profile'])->name('edit');
-  Route::patch('/', [OrderController::class, 'updateProfile'])->name('update');
+    Route::get('/', [OrderController::class, 'profile'])->name('edit');
+    Route::patch('/', [OrderController::class, 'updateProfile'])->name('update');
   });
 });
 
